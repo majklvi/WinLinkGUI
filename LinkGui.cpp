@@ -1,5 +1,5 @@
-// LinkGui.cpp - čisté WinAPI, Win10+ backend bez mklink.exe, "classic" UI.
-// Query otevírá nové okno se strukturovaným GUI (checkboxy pro bool/flagy).
+// LinkGui.cpp - pure WinAPI app with a Win10+ backend and classic UI (no mklink.exe).
+// Query opens a separate window with a structured GUI (checkboxes for booleans/flags).
 //
 // Build (VS2022):
 //   cl /EHsc /DUNICODE /D_UNICODE /DWIN32_LEAN_AND_MEAN /D_CRT_SECURE_NO_WARNINGS LinkGui.cpp user32.lib gdi32.lib comctl32.lib
@@ -350,7 +350,7 @@ struct QueryData {
     std::vector<std::wstring> hardlinkNames;
     std::wstring hardlinkErr;
 
-    std::wstring extraText;  // text pro položky nejdou přenést do GUI
+    std::wstring extraText;  // text for entries that cannot be mapped to dedicated GUI fields
 };
 
 static bool FillVolumeInfoFromPathW(const std::wstring& anyPath, VolumeInfo& out, std::wstring& err)
@@ -814,7 +814,7 @@ static bool CreateSymlinkW(const std::wstring& link, const std::wstring& target,
     }
 
     errOut = L"CreateSymbolicLink failed: " + WinErrW(e) + L"\r\n";
-    errOut += L"Note: symlinks často vyžadují Admin práva nebo Developer Mode.\r\n";
+    errOut += L"Note: symlinks often require Administrator rights or Developer Mode.\r\n";
     return false;
 }
 
@@ -1578,7 +1578,7 @@ int APIENTRY wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, int nCmdShow)
     g_hInst = hInst;
     InitCommonControls();
 
-    // Best-effort vypnutí themingu – bez linkování uxtheme.lib
+    // Best-effort theming disable without linking uxtheme.lib
     HMODULE hUx = LoadLibraryW(L"uxtheme.dll");
     if (hUx) {
         typedef void (WINAPI *PFNSetThemeAppProperties)(DWORD);
